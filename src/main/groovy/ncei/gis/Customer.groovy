@@ -1,14 +1,9 @@
 package ncei.gis
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import com.vividsolutions.jts.geom.Point;
-import com.vividsolutions.jts.geom.Geometry
-import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.Type
-
+import javax.persistence.*
+import com.vividsolutions.jts.geom.*
+import org.hibernate.annotations.*
+import org.hibernate.spatial.*
 import groovy.transform.ToString
 
 @Entity
@@ -21,7 +16,6 @@ public class Customer {
     private String firstName;
     private String lastName;
 
-    @Type(type="org.hibernate.spatial.GeometryType")
     private Geometry geom
 
     //default constructor required by JPA and not otherwise used
