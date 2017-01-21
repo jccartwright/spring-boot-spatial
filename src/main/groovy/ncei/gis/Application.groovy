@@ -13,7 +13,10 @@ import com.vividsolutions.jts.io.WKTReader
 @SpringBootApplication
 class Application implements CommandLineRunner {
     @Autowired
-    CustomerRepository repository;
+    CustomerRepository repository
+
+	@Autowired
+	CustomerService service
 
     static void main(String[] args) {
         SpringApplication.run Application, args
@@ -22,6 +25,9 @@ class Application implements CommandLineRunner {
 
     @Override
     public void run(String... strings) throws Exception {
+		println service.wktToGeometry('POINT(-105 40)')
+	
+	
         // save a couple of customers
         repository.save(new Customer(firstName:  "Jack", lastName:  "Bauer"))
         repository.save(new Customer(firstName:  "Chloe", lastName:  "O'Brian"))
@@ -29,7 +35,7 @@ class Application implements CommandLineRunner {
         repository.save(new Customer(firstName:  "David", lastName:  "Palmer"))
         repository.save(new Customer(firstName:  "Michelle", lastName:  "Dessler"))
 
-        repository.save(new Customer(firstName:"Roger", lastName:"Rabbit", geom: wktToGeometry('POINT(-105 40)')))
+        repository.save(new Customer(firstName:"Roger", lastName:"Rabbit", geom: service.wktToGeometry('POINT(-105 40)')))
 
         // fetch all customers
         println("Customers found with findAll():")
@@ -57,20 +63,8 @@ class Application implements CommandLineRunner {
 
         println("Customers found within POLYGON((-107 39, -102 39, -102 41, -107 41, -107 39)):")
         println("--------------------------------");
-        repository.findWithin(wktToGeometry('POLYGON((-107 39, -102 39, -102 41, -107 41, -107 39))')).each {
+        repository.findWithin(service.wktToGeometry('POLYGON((-107 39, -102 39, -102 41, -107 41, -107 39))')).each {
             println it
         }
-    }
-
-    //utility method to create a Geometry from a WKT string
-    private Geometry wktToGeometry(String wktString) {
-        WKTReader fromText = new WKTReader()
-        Geometry geom = null
-        try {
-            geom = fromText.read(wktString)
-        } catch (ParseException e) {
-            throw new RuntimeException("Not a WKT string:" + wktString)
-        }
-        return geom
     }
 }
