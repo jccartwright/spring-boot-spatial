@@ -7,7 +7,7 @@ import com.vividsolutions.jts.io.WKTReader
 
 
 @Service
-public class CustomerService {
+public class GeometryService {
     WKTReader fromText = new WKTReader()
 	
 	//utility method to create a Geometry from a WKT string
