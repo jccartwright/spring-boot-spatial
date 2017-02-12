@@ -20,4 +20,12 @@ public class Customer {
 
     //default constructor required by JPA and not otherwise used
     protected Customer() {}
+
+    void setFirstName(String firstName) {
+        this.firstName = firstName
+    }
+
+    void setGeom(Geometry geom) {
+        this.geom = geom
+    }
 }

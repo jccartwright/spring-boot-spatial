@@ -1,33 +1,45 @@
 package ncei.gis
 
-import org.springframework.boot.SpringApplication
-import org.springframework.boot.autoconfigure.SpringBootApplication
-import org.springframework.boot.CommandLineRunner
+import ncei.gis.domain.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.CommandLineRunner
-import com.vividsolutions.jts.geom.Geometry
-import com.vividsolutions.jts.io.ParseException
-import com.vividsolutions.jts.io.WKTReader
+import org.springframework.boot.SpringApplication
+import org.springframework.boot.autoconfigure.SpringBootApplication
+import org.springframework.format.FormatterRegistry
+import org.springframework.web.servlet.config.annotation.*
 
 
 @SpringBootApplication
-class Application implements CommandLineRunner {
+class Application extends WebMvcConfigurerAdapter implements CommandLineRunner {
     @Autowired
     CustomerRepository repository
 
+    @Autowired
+    CityRepository cityRepository
+
 	@Autowired
-	CustomerService service
+	GeometryService service
 
     static void main(String[] args) {
         SpringApplication.run Application, args
     }
 
+    @Override
+    void addFormatters(FormatterRegistry registry) {
+        registry.addConverter(new StringToGeometryConverter())
+    }
+
 
     @Override
     public void run(String... strings) throws Exception {
-		println service.wktToGeometry('POINT(-105 40)')
-	
-	
+	    cityRepository.save(new City(
+                name: 'Denver',
+                country: 'US',
+                population: 1405300,
+                capital: false,
+                geom: service.wktToGeometry('POINT(-105.069999694824 39.75)')
+        ))
+
         // save a couple of customers
         repository.save(new Customer(firstName:  "Jack", lastName:  "Bauer"))
         repository.save(new Customer(firstName:  "Chloe", lastName:  "O'Brian"))
